@@ -5,10 +5,26 @@ class CityController extends BaseController {
     $user = DB::table('users')
         ->where('id','=',$id)
         ->first();
+    $city = City::find($user->city_id);
+    $provinces = Province::all();
+    $cities = array();
+    $province_id = 0;
+    if($city != null){
+      $cities = DB::table('cities')
+          ->where('province_id','=',$city->province_id)
+          ->orderby('name','asc')
+          ->get();
+      $province_id = $city->province_id;
+    }
+    return array('user' => $user, 'cities' => $cities,
+        'provinces' => $provinces, 'province_id' => $province_id);
+  }
+  public function getCityByProvince($province_id){
     $cities = DB::table('cities')
+        ->where('province_id','=',$province_id)
         ->orderby('name','asc')
         ->get();
-    return array('user' => $user, 'cities' => $cities);
+    return array('cities' => $cities);
   }
 
   /**

@@ -25,4 +25,8 @@ class City extends Eloquent {
 		return $this->hasMany('Sighting');
 	}
 
+	public function province()
+	{
+		return $this->belongsTo('Province');
+	}
 }

@@ -2,20 +2,21 @@
 
 class UserController extends BaseController {
     public function register(){
-        $username = DB::table('users')->where('username','=',Input::all('username'))->first();
-        if($username){
-            return array('error' => true, 'El username ya está en uso. Elije otro');
+        $username = DB::table('users')->where('username','=',Input::all('username')['username'])->first();
+        if($username != null){
+            return array('error' => true, 'username' => true);
         }
-        $username = DB::table('users')->where('email','=',Input::all('email'))->first();
-        if($username){
-            return array('error' => true, 'El email ya está en uso. Elije otro');
+        $username = DB::table('users')->where('email','=',Input::all('username')['email'])->first();
+        if($username != null){
+            return array('error' => true, 'email' => true);
         }
         $user = new User();
-        $user->username = Input::all('username');
-        $user->email = Input::all('email');
-        $user->password = Input::all('password');
+        $user->username = Input::all('username')['username'];
+        $user->email = Input::all('username')['email'];
+        $user->password = Input::all('username')['password'];
         $user->save();
-        return array('error' => false, 'user' => $user);
+        return array('error' => false, 'username' => Input::all('username')['username'],
+            'password' => Input::all('username')['password']);
 
     }
     public function login(){
@@ -26,17 +27,29 @@ class UserController extends BaseController {
         if($user == null){
             return array('result'=>false);
         }else{
-            return array('result'=>true, 'id' => $user->id);
+            return array('result'=>true, 'user' => $user);
         }
     }
     public function getProfile($id){
         $user = DB::table('users')->where('id','=',$id)->first();
         $teams = Team::all();
-        $cities = DB::table('cities')
-			->orderby('name','asc')
-			->get();
-        return array('user' => $user, 'teams' => $teams, 'cities' => $cities);
+        $city = City::find($user->city_id);
+        $provinces = Province::all();
+        $cities = array();
+        $province_id = 0;
+        if($city != null){
+            $cities = DB::table('cities')
+                ->where('province_id','=',$city->province_id)
+                ->orderby('name','asc')
+                ->get();
+            $province_id = $city->province_id;
+        }
+
+
+        return array('user' => $user, 'teams' => $teams, 'cities' => $cities,
+            'provinces' => $provinces, 'province_id' => $province_id);
     }
+
     public function updateProfile($id){
         try{
             $setting = Input::all('u');

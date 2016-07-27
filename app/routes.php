@@ -25,6 +25,7 @@ Route::post('/updateProfile/{id}','UserController@updateProfile');
 Route::get('/getAttacksByUser/{id}','AttackController@getAttacksByUser'); //HECHO
 Route::get('/getDefensesByUser/{id}','AttackController@getDefensesByUser'); //HECHO
 Route::post('/newAttack/{id}','AttackController@newAttack'); //HECHO
+Route::post('/newDefense/{id}','AttackController@newDefense'); //HECHO
 
 Route::get('/getMessagesByUser/{id}','MessageController@getMessagesByUser'); //HECHO
 Route::post('/newMessage/{id}','MessageController@newMessage'); //HECHO
@@ -32,8 +33,11 @@ Route::post('/newMessage/{id}','MessageController@newMessage'); //HECHO
 Route::get('/getSightingsByUser/{id}','SightingController@getSightingsByUser');
 Route::post('/newSighting/{id}','SightingController@newSighting');
 
+Route::get('/getCityByProvince/{id}','CityController@getCityByProvince');
+
 Route::get('/getCities/{id}','CityController@getCities');
 Route::get('/getPokemons','PokemonController@getPokemons');
 
+
 Route::post('/login','UserController@login');
-Route::post('/register','UserController@register');
+Route::get('/register','UserController@register');
